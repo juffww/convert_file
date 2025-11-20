@@ -10,7 +10,7 @@ public class conversionDAO {
 
     // 1. Tạo mới 1 bản ghi Conversion (Khi user vừa upload xong)
     public int createConversion(conversion conv) {
-        String sql = "INSERT INTO conversions (user_id, input_url, input_public_id, input_filename, status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO conversions (id, input_url, input_public_id, input_filename, status) VALUES (?, ?, ?, ?, ?)";
         // Return ID vừa sinh ra để gửi vào RabbitMQ
         int generatedId = -1;
 
@@ -38,7 +38,7 @@ public class conversionDAO {
     // 2. Lấy danh sách lịch sử convert của User
     public List<conversion> getHistoryByUserId(int userId) {
         List<conversion> list = new ArrayList<>();
-        String sql = "SELECT * FROM conversions WHERE user_id = ? ORDER BY created_at DESC";
+        String sql = "SELECT * FROM conversions WHERE id = ? ORDER BY created_at DESC";
 
         try (Connection conn = new DbConnection().getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -48,7 +48,7 @@ public class conversionDAO {
             while (rs.next()) {
                 conversion c = new conversion();
                 c.setId(rs.getInt("id"));
-                c.setUserId(rs.getInt("user_id"));
+                c.setUserId(rs.getInt("id"));
                 c.setInputFilename(rs.getString("input_filename"));
                 c.setStatus(rs.getString("status"));
                 c.setOutputUrl(rs.getString("output_url"));
@@ -105,7 +105,7 @@ public class conversionDAO {
                 c.setId(rs.getInt("id"));
                 c.setInputUrl(rs.getString("input_url"));
                 c.setInputPublicId(rs.getString("input_public_id"));
-                c.setUserId(rs.getInt("user_id"));
+                c.setUserId(rs.getInt("id"));
                 return c;
             }
         } catch (Exception e) {

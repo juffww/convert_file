@@ -237,7 +237,7 @@
                     placeholder="Nhập tên đăng nhập"
                     required
                     autocomplete="username"
-                    value="user"
+                    value="sinhvien"
                 >
             </div>
 
@@ -250,7 +250,7 @@
                     placeholder="Nhập mật khẩu"
                     required
                     autocomplete="current-password"
-                    value="user01"
+                    value="123456"
                 >
             </div>
 
