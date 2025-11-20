@@ -21,7 +21,7 @@ public class conversionDAO {
             ps.setString(2, conv.getInputUrl());
             ps.setString(3, conv.getInputPublicId());
             ps.setString(4, conv.getInputFilename());
-            ps.setString(5, "PENDING"); // Set luôn pending để chờ queue
+            ps.setString(5, "PENDING");
 
             ps.executeUpdate();
 
@@ -53,7 +53,6 @@ public class conversionDAO {
                 c.setStatus(rs.getString("status"));
                 c.setOutputUrl(rs.getString("output_url"));
                 c.setCreatedAt(rs.getTimestamp("created_at"));
-                // ... set thêm các trường khác nếu cần hiển thị
                 list.add(c);
             }
         } catch (Exception e) {

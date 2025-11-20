@@ -2,21 +2,15 @@ package model.bo;
 
 import model.dao.conversionDAO;
 import model.bean.conversion;
-// Import thư viện RabbitMQ
-// import com.rabbitmq.client.Channel;
-// import com.rabbitmq.client.Connection;
-// import com.rabbitmq.client.ConnectionFactory;
+import com.rabbitmq.client.*;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class conversionBO {
     private conversionDAO conversionDAO = new conversionDAO();
-    private final String QUEUE_NAME = "pdf_convert_queue"; // Tên hàng đợi
+    private final String QUEUE_NAME = "pdf_convert_queue";
 
-    // Hàm xử lý Upload và đẩy vào hàng đợi
     public boolean uploadAndQueue(conversion conv) {
-        // 1. Lưu vào Database trước
         int newId = conversionDAO.createConversion(conv);
 
         if (newId > 0) {
@@ -55,7 +49,6 @@ public class conversionBO {
             System.out.println(" [x] Sent '" + message + "'");
         }
         */
-        // Tạm thời mình comment để bạn import thư viện xong hãy mở ra
         System.out.println("Giả lập: Đã đẩy ID " + message + " vào hàng đợi RabbitMQ");
     }
 }
