@@ -24,9 +24,9 @@ import java.util.Base64;
 
 @WebServlet("/upload")
 @MultipartConfig(
-	fileSizeThreshold = 1024 * 1024 * 2,  // 2MB
-	maxFileSize = 1024 * 1024 * 50,       // 50MB
-	maxRequestSize = 1024 * 1024 * 100    // 100MB
+	fileSizeThreshold = 1024 * 1024 * 2,
+	maxFileSize = 1024 * 1024 * 50,
+	maxRequestSize = 1024 * 1024 * 100
 )
 public class fileUploadController extends HttpServlet {
 
@@ -35,7 +35,6 @@ public class fileUploadController extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		
-		// Kiểm tra session
 		HttpSession session = request.getSession(false);
 		if (session == null || session.getAttribute("user") == null) {
 			response.sendRedirect("/?error=unauthorized");
@@ -46,7 +45,6 @@ public class fileUploadController extends HttpServlet {
 		int userId = currentUser.getId();
 		
 		try {
-			// Lấy file từ request
 			Part filePart = request.getPart("pdfFile");
 			if (filePart == null || filePart.getSize() == 0) {
 				response.sendRedirect("main?error=nofile");
@@ -55,26 +53,21 @@ public class fileUploadController extends HttpServlet {
 			
 			String fileName = getFileName(filePart);
 			
-			// Kiểm tra file PDF
 			if (!fileName.toLowerCase().endsWith(".pdf")) {
 				response.sendRedirect("main?error=invalidtype");
 				return;
 			}
 			
-			// Upload file lên ImageKit
 			ImageKit imageKit = imageKitConnection.getInstance();
 			
-			// Đọc file thành byte array và convert sang Base64
 			byte[] fileBytes;
 			try (InputStream inputStream = filePart.getInputStream()) {
 				fileBytes = inputStream.readAllBytes();
 			}
 			String base64File = Base64.getEncoder().encodeToString(fileBytes);
 			
-			// Tạo tên file unique
 			String uniqueFileName = System.currentTimeMillis() + "_" + userId + "_" + fileName;
 			
-			// Upload lên ImageKit
 			FileCreateRequest fileCreateRequest = new FileCreateRequest(
 				base64File,
 				uniqueFileName
@@ -89,11 +82,9 @@ public class fileUploadController extends HttpServlet {
 				return;
 			}
 			
-			// Lấy thông tin file đã upload
 			String fileUrl = uploadResult.getUrl();
 			String fileId = uploadResult.getFileId();
 			
-			// Tạo object conversion
 			conversion conv = new conversion();
 			conv.setUserId(userId);
 			conv.setInputUrl(fileUrl);
@@ -101,7 +92,6 @@ public class fileUploadController extends HttpServlet {
 			conv.setInputFilename(fileName);
 			conv.setStatus("UPLOADED");
 			
-			// Lưu vào database thông qua BO
 			conversionBO conversionBO = new conversionBO();
 			boolean success = conversionBO.uploadAndQueue(conv);
 			

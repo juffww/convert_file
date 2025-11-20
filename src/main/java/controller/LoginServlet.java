@@ -26,7 +26,6 @@ public class LoginServlet extends HttpServlet {
 		String password = request.getParameter("password");
 		String remember = request.getParameter("remember");
 
-		// Validate input
 		if (username == null || username.trim().isEmpty() || password == null || password.isEmpty()) {
 			response.sendRedirect("index.jsp?error=invalid");
 			return;
@@ -39,14 +38,12 @@ public class LoginServlet extends HttpServlet {
 			user u = ubo.login(username.trim(), password);
 			
 			if (u != null) {
-				// Đăng nhập thành công
 				HttpSession session = request.getSession(true);
 				session.setAttribute("user", u);
 				session.setAttribute("userId", u.getId());
 				session.setAttribute("username", u.getUsername());
 				session.setMaxInactiveInterval(3600); // 1 hour
 
-				// Xử lý Remember Me
 				if (remember != null && (remember.equals("on") || remember.equals("true"))) {
 					Cookie c = new Cookie("username", username);
 					c.setMaxAge(7 * 24 * 3600); // 7 days
@@ -62,11 +59,9 @@ public class LoginServlet extends HttpServlet {
 
 				response.sendRedirect("main");
 			} else {
-				// Sai username hoặc password
 				response.sendRedirect("index.jsp?error=invalid");
 			}
 		} catch (Exception e) {
-			// Log chi tiết lỗi
 			System.err.println("=== LOGIN ERROR ===");
 			System.err.println("Username: " + username);
 			System.err.println("Error: " + e.getMessage());

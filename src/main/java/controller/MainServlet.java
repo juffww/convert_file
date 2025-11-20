@@ -21,7 +21,6 @@ public class MainServlet extends HttpServlet {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
 		
-		// Kiểm tra session
 		HttpSession session = request.getSession(false);
 		if (session == null || session.getAttribute("user") == null) {
 			response.sendRedirect("/?error=unauthorized");
@@ -32,16 +31,13 @@ public class MainServlet extends HttpServlet {
 		int userId = currentUser.getId();
 		
 		try {
-			// Lấy danh sách conversion của user
 			conversionBO conversionBO = new conversionBO();
 			List<conversion> conversions = conversionBO.getUserHistory(userId);
 			
-			// Set attributes để JSP sử dụng
 			request.setAttribute("conversions", conversions);
 			request.setAttribute("username", currentUser.getUsername());
 			request.setAttribute("userId", userId);
 			
-			// Forward to JSP
 			request.getRequestDispatcher("/WEB-INF/views/main.jsp").forward(request, response);
 			
 		} catch (Exception e) {
