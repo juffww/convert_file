@@ -1,39 +1,75 @@
+########################
+# Maven
+########################
 target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-.kotlin
+*.log
 
-### IntelliJ IDEA ###
-.idea/modules.xml
-.idea/jarRepositories.xml
-.idea/compiler.xml
-.idea/libraries/
-*.iws
+########################
+# IntelliJ IDEA
+########################
+.idea/
 *.iml
 *.ipr
+*.iws
 
-### Eclipse ###
+# Optional IDEA files to ignore
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/dictionaries/
+.idea/vcs.xml
+.idea/libraries/
+
+########################
+# Kotlin (if present)
+########################
+.kotlin/
+
+########################
+# OS Files
+########################
+.DS_Store
+Thumbs.db
+desktop.ini
+
+########################
+# Build Artifacts
+########################
+*.class
+*.war
+*.ear
+
+########################
+# Eclipse
+########################
 .apt_generated
 .classpath
 .factorypath
 .project
-.settings
+.settings/
 .springBeans
 .sts4-cache
 
-### NetBeans ###
+########################
+# NetBeans
+########################
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
+########################
+# VS Code
+########################
 .vscode/
+########################
+# Keep important files
+########################
+!src/
+!webapp/
+pom.xml
+create-project.sh
 convert_file.sql
-### Mac OS ###
-.DS_Store
+deploy.sh
+run-tomcat.sh
+
