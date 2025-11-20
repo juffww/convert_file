@@ -82,7 +82,7 @@ public class conversionDAO {
     }
 
     // 4. Update kết quả thành công (Dùng cho Worker khi xong việc)
-    public void updateconversionResult(int conversionId, String outputUrl, String outputPublicId) {
+    public void updateConversionResult(int conversionId, String outputUrl, String outputPublicId) {
         String sql = "UPDATE conversions SET status = 'COMPLETED', output_url = ?, output_public_id = ? WHERE id = ?";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -97,7 +97,7 @@ public class conversionDAO {
     }
 
     // 5. Lấy chi tiết 1 conversion (Worker cần cái này để biết input_url ở đâu mà tải về)
-    public conversion getconversionById(int id) {
+    public conversion getConversionById(int id) {
         String sql = "SELECT * FROM conversions WHERE id = ?";
         try (Connection conn = DbConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
