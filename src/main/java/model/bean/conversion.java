@@ -25,7 +25,6 @@ public class conversion {
         this.status = "UPLOADED";
     }
 
-    // Full Getters and Setters (Tự generate bằng IDE nhé)
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public int getUserId() { return userId; }
