@@ -3,9 +3,7 @@ package controller;
 import model.bean.conversion;
 import model.bean.user;
 import model.bo.conversionBO;
-import utils.imageKitConnection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import utils.ImageKitConnection;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
@@ -27,12 +25,10 @@ import java.util.Base64;
 @WebServlet("/upload")
 @MultipartConfig(
 	fileSizeThreshold = 1024 * 1024 * 2,
-	maxFileSize = 1024 * 1024 * 20,
-	maxRequestSize = 1024 * 1024 * 50
+	maxFileSize = 1024 * 1024 * 50,
+	maxRequestSize = 1024 * 1024 * 100
 )
-public class fileUploadController extends HttpServlet {
-    private static final Logger logger = LoggerFactory.getLogger(fileUploadController.class);
-    private static final long MAX_FILE_SIZE = 20 * 1024 * 1024;
+public class FileUploadController extends HttpServlet {
 
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -54,13 +50,7 @@ public class fileUploadController extends HttpServlet {
 				response.sendRedirect("main?error=nofile");
 				return;
 			}
-
-            if (filePart.getSize() > MAX_FILE_SIZE) {
-                logger.warn("User {} attempted to upload file too large: {} bytes", userId, filePart.getSize());
-                response.sendRedirect("main?error=filetoobig");
-                return;
-            }
-
+			
 			String fileName = getFileName(filePart);
 			
 			if (!fileName.toLowerCase().endsWith(".pdf")) {
@@ -68,7 +58,7 @@ public class fileUploadController extends HttpServlet {
 				return;
 			}
 			
-			ImageKit imageKit = imageKitConnection.getInstance();
+			ImageKit imageKit = ImageKitConnection.getInstance();
 			
 			byte[] fileBytes;
 			try (InputStream inputStream = filePart.getInputStream()) {

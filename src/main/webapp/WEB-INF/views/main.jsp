@@ -300,6 +300,26 @@
             font-weight: 500;
         }
 
+        .file-validation {
+            margin-top: 10px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .file-validation.error {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef9a9a;
+        }
+
+        .file-validation.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #a5d6a7;
+        }
+
         @media (max-width: 768px) {
             .header {
                 flex-direction: column;
@@ -351,11 +371,14 @@
                         accept=".pdf,application/pdf" 
                         required 
                         class="file-input"
-                        onchange="updateFileName()"
+                        onchange="validateFile()"
                     >
-                    <small id="fileName" style="color: #666; margin-top: 5px; display: block;"></small>
+                    <small style="color: #666; font-size: 12px; display: block; margin-top: 5px;">
+                         Yêu cầu: File PDF, tối đa 20MB
+                    </small>
+                    <div id="fileValidation" class="file-validation"></div>
                 </div>
-                <button type="submit" class="upload-btn" id="uploadBtn">
+                <button type="submit" class="upload-btn" id="uploadBtn" disable>
                     <span id="uploadBtnText">Tải lên</span>
                 </button>
             </form>
@@ -468,6 +491,99 @@
     </div>
 
     <script>
+        const MAX_FILE_SIZE = 50 * 1024 * 1024;
+
+        function validateFile() {
+            const fileInput = document.getElementById('pdfFile');
+            const fileValidation = document.getElementById('fileValidation');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadBtnText = document.getElementById('uploadBtnText');
+
+            // Reset
+            fileValidation.style.display = 'none';
+            fileValidation.className = 'file-validation';
+            uploadBtn.disabled = true;
+            uploadBtnText.textContent = 'Chọn file để tải lên';
+
+            // Kiểm tra có file không
+            if (fileInput.files.length === 0) {
+                return;
+            }
+
+            const file = fileInput.files[0];
+            let isValid = true;
+            let message = '';
+
+            // 1. Kiểm tra extension
+            if (!file.name.toLowerCase().endsWith('.pdf')) {
+                isValid = false;
+                message = '❌ File phải có định dạng .pdf';
+            }
+            // 2. Kiểm tra file rỗng
+            else if (file.size === 0) {
+                isValid = false;
+                message = '❌ File rỗng (0 bytes)';
+            }
+            // 3. Kiểm tra kích thước
+            else if (file.size > MAX_FILE_SIZE) {
+                isValid = false;
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                message = `❌ File quá lớn: ${sizeMB}MB (tối đa 50MB)`;
+            }
+            // 4. File hợp lệ
+            else {
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                message = `✅ File hợp lệ: ${file.name} (${sizeMB} MB)`;
+            }
+
+            // Hiển thị kết quả
+            fileValidation.style.display = 'block';
+            fileValidation.className = 'file-validation ' + (isValid ? 'success' : 'error');
+            fileValidation.textContent = message;
+
+            // Enable/disable button
+            if (isValid) {
+                uploadBtn.disabled = false;
+                uploadBtnText.textContent = 'Tải lên';
+            }
+        }
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            const fileInput = document.getElementById('pdfFile');
+            const uploadBtn = document.getElementById('uploadBtn');
+            const uploadBtnText = document.getElementById('uploadBtnText');
+
+            // Validate lần cuối
+            if (fileInput.files.length === 0) {
+                e.preventDefault();
+                showMessage('❌ Vui lòng chọn file!', 'error');
+                return false;
+            }
+
+            const file = fileInput.files[0];
+
+            if (!file.name.toLowerCase().endsWith('.pdf')) {
+                e.preventDefault();
+                showMessage('❌ Chỉ chấp nhận file PDF!', 'error');
+                return false;
+            }
+
+            if (file.size > MAX_FILE_SIZE) {
+                e.preventDefault();
+                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                showMessage(`❌ File quá lớn (${sizeMB}MB). Tối đa 50MB!`, 'error');
+                return false;
+            }
+
+            if (file.size === 0) {
+                e.preventDefault();
+                showMessage('❌ File rỗng!', 'error');
+                return false;
+            }
+
+            // Disable button
+            uploadBtn.disabled = true;
+            uploadBtnText.textContent = 'Đang tải lên...';
+        });
         // Hiển thị message từ URL params
         window.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
@@ -499,42 +615,6 @@
                 setTimeout(() => messageDiv.remove(), 300);
             }, 5000);
         }
-
-        function updateFileName() {
-            const fileInput = document.getElementById('pdfFile');
-            const fileName = document.getElementById('fileName');
-            if (fileInput.files.length > 0) {
-                const file = fileInput.files[0];
-                const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-                fileName.textContent = `Đã chọn: ${file.name} (${sizeMB} MB)`;
-            } else {
-                fileName.textContent = '';
-            }
-        }
-
-        // Form validation
-        document.getElementById('uploadForm').addEventListener('submit', function(e) {
-            const fileInput = document.getElementById('pdfFile');
-            const uploadBtn = document.getElementById('uploadBtn');
-            const uploadBtnText = document.getElementById('uploadBtnText');
-            
-            if (fileInput.files.length === 0) {
-                e.preventDefault();
-                showMessage('❌ Vui lòng chọn file!', 'error');
-                return false;
-            }
-            
-            const file = fileInput.files[0];
-            if (!file.name.toLowerCase().endsWith('.pdf')) {
-                e.preventDefault();
-                showMessage('❌ Chỉ chấp nhận file PDF!', 'error');
-                return false;
-            }
-            
-            // Disable button và hiển thị loading
-            uploadBtn.disabled = true;
-            uploadBtnText.textContent = 'Đang tải lên...';
-        });
 
         function convertFile(fileId) {
             if (confirm('Bạn có muốn chuyển đổi file này sang DOCX?')) {

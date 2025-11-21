@@ -4,6 +4,8 @@ import model.bean.user;
 import model.bo.userBO;
 import utils.DbConnection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
@@ -21,7 +23,7 @@ public class LoginServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("UTF-8");
 		response.setCharacterEncoding("UTF-8");
-		
+
 		String username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String remember = request.getParameter("remember");
@@ -36,7 +38,7 @@ public class LoginServlet extends HttpServlet {
 			conn = DbConnection.getConnection();
 			userBO ubo = new userBO(conn);
 			user u = ubo.login(username.trim(), password);
-			
+
 			if (u != null) {
 				HttpSession session = request.getSession(true);
 				session.setAttribute("user", u);
@@ -66,8 +68,7 @@ public class LoginServlet extends HttpServlet {
 			System.err.println("Username: " + username);
 			System.err.println("Error: " + e.getMessage());
 			e.printStackTrace();
-			System.err.println("===================");
-			
+
 			response.sendRedirect("index.jsp?error=server");
 		} finally {
 			if (conn != null) {

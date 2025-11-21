@@ -3,7 +3,7 @@ package utils;
 import io.imagekit.sdk.ImageKit;
 import io.imagekit.sdk.config.Configuration;
 
-public class imageKitConnection {
+public class ImageKitConnection {
 
     private static ImageKit imageKit;
 

@@ -11,7 +11,7 @@ import java.util.List;
 
 public class conversionBO {
     private conversionDAO conversionDAO = new conversionDAO();
-    private final String QUEUE_NAME = "pdf_convert_queue";
+    private final String QUEUE_NAME = "pdf_converter_queue";
 
     public boolean uploadAndQueue(conversion conv) throws Exception {
         int newId = conversionDAO.createConversion(conv);
@@ -39,17 +39,21 @@ public class conversionBO {
         return false;
     }
 
-    public void updateStatus(int conversionId, String status, String errorMessage)
-    {
+    public void updateConversionResult(int conversionId, String outputUrl, String outputPublicId) {
+        conversionDAO.updateConversionResult(conversionId, outputUrl, outputPublicId);
+    }
+
+    public void updateStatus(int conversionId, String status, String errorMessage) {
         conversionDAO.updateStatus(conversionId, status, errorMessage);
     }
+
     public List<conversion> getUserHistory(int userId) {
         return conversionDAO.getHistoryByUserId(userId);
     }
 
     private void pushToRabbitMQ(String message) throws Exception {
         try (Connection conn = (Connection) rabbitMQConnection.getConnection();
-                Channel channel = conn.createChannel()){
+             Channel channel = conn.createChannel()){
             channel.queueDeclare(QUEUE_NAME, true, false, false, null);
 
             //Gui jsonMessage
