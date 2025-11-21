@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
+<%@ page import="model.bean.file" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.text.DecimalFormat" %>
 <!DOCTYPE html>
@@ -325,7 +326,7 @@
         <div class="header">
             <h1>📄 PDF to DOCX Converter</h1>
             <div class="user-info">
-                <span class="user-name">👤 <%= session.getAttribute("username") %></span>
+                <span class="user-name">👤 <%= request.getAttribute("username") %></span>
                 <form action="logout" method="POST" style="display:inline;">
                     <button type="submit" class="logout-btn">Đăng xuất</button>
                 </form>
@@ -359,6 +360,67 @@
         </div>
 
         <!-- Files List Section -->
+        <div class="files-section">
+            <!-- <h2>📂 Danh sách file của bạn</h2>
+            
+            <%
+                List<file> files = (List<file>) request.getAttribute("files");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                DecimalFormat sizeFormat = new DecimalFormat("#,##0.00");
+                
+                if (files != null && !files.isEmpty()) {
+            %>
+            <div class="file-info-badge">
+                Tổng số file: <%= files.size() %>
+            </div> -->
+            
+            <table class="files-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tên file</th>
+                        <th>Kích thước</th>
+                        <th>Ngày tải lên</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <!-- <tbody>
+                    <%
+                        for (file f : files) {
+                            double fileSizeKB = f.getFileSize() / 1024.0;
+                            double fileSizeMB = fileSizeKB / 1024.0;
+                            String sizeDisplay = fileSizeMB >= 1 
+                                ? sizeFormat.format(fileSizeMB) + " MB" 
+                                : sizeFormat.format(fileSizeKB) + " KB";
+                    %>
+                    <tr>
+                        <td><strong>#<%= f.getFileId() %></strong></td>
+                        <td class="file-name">📄 <%= f.getOriginalFilename() %></td>
+                        <td class="file-size"><%= sizeDisplay %></td>
+                        <td class="file-date"><%= dateFormat.format(f.getUploadTime()) %></td>
+                        <td>
+                            <button class="action-btn convert-btn" onclick="convertFile(<%= f.getFileId() %>)">
+                                🔄 Chuyển đổi
+                            </button>
+                            <button class="action-btn download-btn" onclick="downloadFile(<%= f.getFileId() %>)">
+                                ⬇️ Tải về
+                            </button>
+                            <button class="action-btn delete-btn" onclick="deleteFile(<%= f.getFileId() %>, '<%= f.getOriginalFilename().replace("'", "\\'") %>')">
+                                🗑️ Xóa
+                            </button>
+                        </td>
+                    </tr>
+                    <% } %>
+                </tbody> -->
+            </table>
+            <% } else { %>
+            <div class="empty-state">
+                <div class="empty-state-icon">📭</div>
+                <div class="empty-state-text">Chưa có file nào</div>
+                <div class="empty-state-subtext">Hãy tải lên file PDF đầu tiên của bạn!</div>
+            </div>
+            <% } %>
+        </div>
     </div>
 
     <script>
