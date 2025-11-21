@@ -3,12 +3,12 @@ package main;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.rabbitmq.client.*;
+import io.imagekit.sdk.exceptions.*;
 import io.imagekit.sdk.models.FileCreateRequest;
+import io.imagekit.sdk.models.results.Result;
 import utils.rabbitMQConnection;
 import utils.imageKitConnection;
 
-import javax.xml.transform.Result;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -18,6 +18,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import utils.SecurityConfig;
 
 /*
 * 1. Worker now get JSON from rabbitMQ
@@ -38,7 +39,7 @@ public class WorkerMain {
         {
             Connection conn = rabbitMQConnection.getConnection();
             Channel channel = conn.createChannel();
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+            channel.queueDeclare(QUEUE_NAME, true, false, false, null);
             channel.basicQos(1);
 
             DeliverCallback deliverCallback = (consumerTag, delivery) -> {
@@ -53,7 +54,7 @@ public class WorkerMain {
 
                     int id = job.get("id").getAsInt();
                     String input_url =  job.get("input_url").getAsString();
-                    String file_name =  job.get("file_name").getAsString();
+                    String file_name =  job.get("input_filename").getAsString();
 
                     //2. Convert (Download -> convert -> upload)
                     processConversion(id, input_url, file_name);
@@ -66,7 +67,7 @@ public class WorkerMain {
                     e.printStackTrace();
                 }
             };
-            channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> {});
+            channel.basicConsume(QUEUE_NAME, false, deliverCallback, consumerTag -> {});
 
             Object lock = new Object();
             synchronized (lock) {lock.wait();}
@@ -77,29 +78,32 @@ public class WorkerMain {
         }
     }
 
-    private void processConversion(int id, String input_url, String file_name)
+    private static void processConversion(int id, String input_url, String file_name)
     {
         try
         {
             System.out.println("    ---> Donwloading from " + input_url);
             //Download file from ImageKit
             InputStream fileStream = new URL(input_url).openStream();
-
+            byte[] fileBytes = fileStream.readAllBytes();
             //Convert
-
+            System.out.println("    --> Đang convert...");
+            Thread.sleep(3000);
+            byte[] convertedBytes = fileBytes;
 
             //Upload result (file docx) to ImageKit
-            System.out.println("   ---> Uploading....");
-            FileCreateRequest fileCreateRequest = new FileCreateRequest();
-            fileCreateRequest.setFolder("/docx_downloads");
+            System.out.println("    --> Đang upload kết quả...");
+            FileCreateRequest fileCreateRequest = new FileCreateRequest(convertedBytes, "converted_" + file_name + ".pdf");
+            fileCreateRequest.setFolder("/docx_downloads/");
+
             Result result = imageKitConnection.getInstance().upload(fileCreateRequest);
 
             //Call api to server web
-            repo
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            reportSuccess(id, result.getUrl(), result.getFileId());
+        } catch (Exception e) {
+            System.err.println("    [!] Lỗi xử lý conversion: " + e.getMessage());
+            e.printStackTrace();
+            reportFail(id, e.getMessage());
         }
     }
 
@@ -130,6 +134,7 @@ public class WorkerMain {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(SERVER_CALLBACK_URL))
                     .header("Content-Type", "application/json")
+                    .header("X-Callback-Secret", SecurityConfig.CALLBACK_SECRET)
                     .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                     .build();
 
