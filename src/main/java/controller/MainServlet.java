@@ -26,7 +26,7 @@ public class MainServlet extends HttpServlet {
 		// Kiểm tra session
 		HttpSession session = request.getSession(false);
 		if (session == null || session.getAttribute("user") == null) {
-			response.sendRedirect("index.html?error=unauthorized");
+			response.sendRedirect("/?error=unauthorized");
 			return;
 		}
 		
@@ -56,7 +56,7 @@ public class MainServlet extends HttpServlet {
 			e.printStackTrace();
 			System.err.println("======================");
 			
-			response.sendRedirect("index.html?error=server");
+			response.sendRedirect("/?error=server");
 		} finally {
 			if (conn != null) {
 				try {
