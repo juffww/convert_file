@@ -59,7 +59,5 @@ public class conversionBO {
         catch (Exception e) {
 
         }
-        System.out.println("Giả lập: Đã đẩy ID " + message + " vào hàng đợi RabbitMQ");
     }
-
 }
