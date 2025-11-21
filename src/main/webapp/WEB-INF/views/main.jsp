@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.util.List" %>
+<%@ page import="model.bean.conversion" %>
 <%@ page import="java.text.SimpleDateFormat" %>
 <%@ page import="java.text.DecimalFormat" %>
 <!DOCTYPE html>
@@ -359,6 +360,104 @@
         </div>
 
         <!-- Files List Section -->
+        <div class="files-section">
+            <h2>📋 Lịch sử chuyển đổi</h2>
+            
+            <%
+                List<conversion> conversions = (List<conversion>) request.getAttribute("conversions");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+                DecimalFormat sizeFormat = new DecimalFormat("#,##0.00");
+            %>
+            
+            <% if (conversions == null || conversions.isEmpty()) { %>
+                <div class="empty-state">
+                    <div class="empty-state-icon">📭</div>
+                    <div class="empty-state-text">Chưa có file nào được tải lên</div>
+                    <div class="empty-state-subtext">Hãy tải lên file PDF đầu tiên của bạn!</div>
+                </div>
+            <% } else { %>
+                <table class="files-table">
+                    <thead>
+                        <tr>
+                            <th>Tên file</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tải lên</th>
+                            <th>File gốc</th>
+                            <th>File đã convert</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% for (conversion conv : conversions) { 
+                            String statusColor = "";
+                            String statusText = "";
+                            switch(conv.getStatus()) {
+                                case "UPLOADED":
+                                    statusColor = "#2196F3";
+                                    statusText = "Đã tải lên";
+                                    break;
+                                case "PENDING":
+                                    statusColor = "#FF9800";
+                                    statusText = "Chờ xử lý";
+                                    break;
+                                case "PROCESSING":
+                                    statusColor = "#9C27B0";
+                                    statusText = "Đang xử lý";
+                                    break;
+                                case "COMPLETED":
+                                    statusColor = "#4CAF50";
+                                    statusText = "Hoàn thành";
+                                    break;
+                                case "FAILED":
+                                    statusColor = "#f44336";
+                                    statusText = "Thất bại";
+                                    break;
+                                default:
+                                    statusColor = "#9E9E9E";
+                                    statusText = conv.getStatus();
+                            }
+                        %>
+                        <tr>
+                            <td>
+                                <div class="file-name"><%= conv.getInputFilename() %></div>
+                            </td>
+                            <td>
+                                <span class="file-info-badge" style="background: <%= statusColor %>15; color: <%= statusColor %>;">
+                                    <%= statusText %>
+                                </span>
+                            </td>
+                            <td>
+                                <div class="file-date">
+                                    <%= conv.getCreatedAt() != null ? dateFormat.format(conv.getCreatedAt()) : "N/A" %>
+                                </div>
+                            </td>
+                            <td>
+                                <% if (conv.getInputUrl() != null && !conv.getInputUrl().isEmpty()) { %>
+                                    <a href="<%= conv.getInputUrl() %>" target="_blank" class="action-btn download-btn">
+                                        Xem PDF
+                                    </a>
+                                <% } else { %>
+                                    <span style="color: #999;">N/A</span>
+                                <% } %>
+                            </td>
+                            <td>
+                                <% if ("COMPLETED".equals(conv.getStatus()) && conv.getOutputUrl() != null) { %>
+                                    <a href="<%= conv.getOutputUrl() %>" target="_blank" class="action-btn download-btn">
+                                        Tải DOCX
+                                    </a>
+                                <% } else if ("FAILED".equals(conv.getStatus())) { %>
+                                    <span style="color: #f44336; font-size: 12px;">
+                                        <%= conv.getErrorMessage() != null ? conv.getErrorMessage() : "Lỗi" %>
+                                    </span>
+                                <% } else { %>
+                                    <span style="color: #999;">Đang xử lý...</span>
+                                <% } %>
+                            </td>
+                        </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+            <% } %>
+        </div>
     </div>
 
     <script>

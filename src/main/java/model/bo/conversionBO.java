@@ -2,6 +2,7 @@ package model.bo;
 
 import model.dao.conversionDAO;
 import model.bean.conversion;
+import java.sql.Connection;
 import com.rabbitmq.client.*;
 
 import java.util.List;
@@ -51,4 +52,5 @@ public class conversionBO {
         */
         System.out.println("Giả lập: Đã đẩy ID " + message + " vào hàng đợi RabbitMQ");
     }
+
 }
