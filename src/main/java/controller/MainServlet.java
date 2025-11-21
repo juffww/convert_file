@@ -1,7 +1,5 @@
 package controller;
 
-// import model.bean.file;
-// import model.dao.fileDAO;
 import model.bean.user;
 import utils.DbConnection;
 
