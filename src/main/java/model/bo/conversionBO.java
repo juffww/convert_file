@@ -2,54 +2,63 @@ package model.bo;
 
 import model.dao.conversionDAO;
 import model.bean.conversion;
-import java.sql.Connection;
 import com.rabbitmq.client.*;
+import utils.rabbitMQConnection;
+import com.google.gson.JsonObject;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class conversionBO {
     private conversionDAO conversionDAO = new conversionDAO();
     private final String QUEUE_NAME = "pdf_convert_queue";
 
-    public boolean uploadAndQueue(conversion conv) {
+    public boolean uploadAndQueue(conversion conv) throws Exception {
         int newId = conversionDAO.createConversion(conv);
 
         if (newId > 0) {
-            // 2. Nếu lưu DB thành công -> Đẩy ID vào RabbitMQ
-            try {
-                pushToRabbitMQ(String.valueOf(newId));
+            try
+            {
+                JsonObject json = new JsonObject();
+                json.addProperty("id", newId);
+                json.addProperty("input_url", conv.getInputUrl());
+                json.addProperty("input_filename", conv.getInputFilename());
+                //Chuyen object thanh chuoi json
+                String jsonMessage = json.toString();
+
+                pushToRabbitMQ(jsonMessage);
                 return true;
-            } catch (Exception e) {
+            }
+            catch (Exception e)
+            {
                 e.printStackTrace();
-                // Nếu lỗi RabbitMQ, có thể update status DB thành FAILED
-                conversionDAO.updateStatus(newId, "FAILED", "Queue Error");
+                conversionDAO.updateStatus(newId, "FAILED", "Queue Error: " + e.getMessage());
                 return false;
             }
         }
         return false;
     }
 
+    public void updateStatus(int conversionId, String status, String errorMessage)
+    {
+        conversionDAO.updateStatus(conversionId, status, errorMessage);
+    }
     public List<conversion> getUserHistory(int userId) {
         return conversionDAO.getHistoryByUserId(userId);
     }
 
-    // Hàm private để đẩy message vào Queue
     private void pushToRabbitMQ(String message) throws Exception {
-        // Đoạn code này cần thư viện amqp-client-5.x.x.jar
-        /*
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.setHost("localhost");
-        // factory.setUsername("guest");
-        // factory.setPassword("guest");
+        try (Connection conn = (Connection) rabbitMQConnection.getConnection();
+                Channel channel = conn.createChannel()){
+            channel.queueDeclare(QUEUE_NAME, true, false, false, null);
 
-        try (Connection connection = factory.newConnection();
-             Channel channel = connection.createChannel()) {
-
-            channel.queueDeclare(QUEUE_NAME, false, false, false, null);
+            //Gui jsonMessage
             channel.basicPublish("", QUEUE_NAME, null, message.getBytes(StandardCharsets.UTF_8));
-            System.out.println(" [x] Sent '" + message + "'");
+            System.out.println(" [x] Sent JSON to RabbitMQ: '" + message + "'");
         }
-        */
+        catch (Exception e) {
+
+        }
         System.out.println("Giả lập: Đã đẩy ID " + message + " vào hàng đợi RabbitMQ");
     }
 
