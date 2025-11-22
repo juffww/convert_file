@@ -361,7 +361,12 @@
 
         <!-- Files List Section -->
         <div class="files-section">
-            <h2>📋 Lịch sử chuyển đổi</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="margin: 0;">📋 Lịch sử chuyển đổi</h2>
+                <button onclick="refreshHistory()" class="action-btn convert-btn" style="padding: 8px 20px; font-size: 14px;">
+                    🔄 Làm mới
+                </button>
+            </div>
             
             <%
                 List<conversion> conversions = (List<conversion>) request.getAttribute("conversions");
@@ -543,6 +548,11 @@
             if (confirm('Bạn có chắc muốn xóa file "' + fileName + '"?')) {
                 window.location.href = 'delete?fileId=' + fileId;
             }
+        }
+
+        function refreshHistory() {
+            // Reload trang main để lấy dữ liệu mới nhất
+            window.location.href = 'main';
         }
     </script>
 </body>
