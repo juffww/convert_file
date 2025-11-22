@@ -525,9 +525,20 @@
             }
             
             const file = fileInput.files[0];
+            
+            // Kiểm tra loại file
             if (!file.name.toLowerCase().endsWith('.pdf')) {
                 e.preventDefault();
                 showMessage('❌ Chỉ chấp nhận file PDF!', 'error');
+                return false;
+            }
+            
+            // Kiểm tra kích thước file (20MB = 20 * 1024 * 1024 bytes)
+            const maxSize = 20 * 1024 * 1024;
+            if (file.size > maxSize) {
+                e.preventDefault();
+                const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
+                showMessage(`❌ File quá lớn (${fileSizeMB} MB). Vui lòng chọn file dưới 20 MB!`, 'error');
                 return false;
             }
             
