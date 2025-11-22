@@ -538,7 +538,7 @@
             if (file.size > maxSize) {
                 e.preventDefault();
                 const fileSizeMB = (file.size / (1024 * 1024)).toFixed(2);
-                showMessage(`❌ File quá lớn (${fileSizeMB} MB). Vui lòng chọn file dưới 20 MB!`, 'error');
+                showMessage(` File quá lớn (${fileSizeMB} MB). Vui lòng chọn file dưới 20 MB!`, 'error');
                 return false;
             }
             
