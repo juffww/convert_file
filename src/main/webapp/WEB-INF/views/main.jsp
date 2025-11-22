@@ -471,15 +471,17 @@
                             </td>
                             <td>
                                 <% if ("COMPLETED".equals(conv.getStatus()) && conv.getOutputUrl() != null) { %>
-                                    <a href="<%= conv.getOutputUrl() %>" target="_blank" class="action-btn download-btn">
-                                        Tải DOCX
-                                    </a>
+                                <a href="<%= conv.getOutputUrl() %>" target="_blank" class="action-btn download-btn">
+                                    Tải DOCX
+                                </a>
                                 <% } else if ("FAILED".equals(conv.getStatus())) { %>
-                                    <span style="color: #f44336; font-size: 12px;">
-                                        <%= conv.getErrorMessage() != null ? conv.getErrorMessage() : "Lỗi" %>
+                                <div style="max-width: 100px;">
+                                    <span style="color: #f44336; font-size: 12px; display: block; word-wrap: break-word; line-height: 1.4;">
+                                        <%= conv.getErrorMessage() != null ? conv.getErrorMessage() : "Lỗi chuyển đổi" %>
                                     </span>
+                                </div>
                                 <% } else { %>
-                                    <span style="color: #999;">Đang xử lý...</span>
+                                <span style="color: #999;">Đang xử lý...</span>
                                 <% } %>
                             </td>
                         </tr>

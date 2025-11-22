@@ -11,7 +11,6 @@ public class conversionDAO {
     // 1. Tạo mới 1 bản ghi Conversion (Khi user vừa upload xong)
     public int createConversion(conversion conv) {
         String sql = "INSERT INTO conversions (user_id, input_url, input_public_id, input_filename, status) VALUES (?, ?, ?, ?, ?)";
-        // Return ID vừa sinh ra để gửi vào RabbitMQ
         int generatedId = -1;
 
         try (Connection conn = DbConnection.getConnection();

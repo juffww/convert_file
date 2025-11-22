@@ -3,7 +3,7 @@ package controller;
 import model.bean.conversion;
 import model.bean.user;
 import model.bo.conversionBO;
-import utils.imageKitConnection;
+import utils.ImageKitConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,8 +30,8 @@ import java.util.Base64;
 	maxFileSize = 1024 * 1024 * 20,
 	maxRequestSize = 1024 * 1024 * 50
 )
-public class fileUploadController extends HttpServlet {
-    private static final Logger logger = LoggerFactory.getLogger(fileUploadController.class);
+public class FileUploadController extends HttpServlet {
+    private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
     private static final long MAX_FILE_SIZE = 20 * 1024 * 1024;
 
 	@Override
@@ -68,7 +68,7 @@ public class fileUploadController extends HttpServlet {
 				return;
 			}
 			
-			ImageKit imageKit = imageKitConnection.getInstance();
+			ImageKit imageKit = ImageKitConnection.getInstance();
 			
 			byte[] fileBytes;
 			try (InputStream inputStream = filePart.getInputStream()) {

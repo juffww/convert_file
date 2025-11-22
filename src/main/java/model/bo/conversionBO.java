@@ -3,7 +3,7 @@ package model.bo;
 import model.dao.conversionDAO;
 import model.bean.conversion;
 import com.rabbitmq.client.*;
-import utils.rabbitMQConnection;
+import utils.RabbitMQConnection;
 import com.google.gson.JsonObject;
 
 import java.nio.charset.StandardCharsets;
@@ -52,8 +52,8 @@ public class conversionBO {
     }
 
     private void pushToRabbitMQ(String message) throws Exception {
-        try (Connection conn = (Connection) rabbitMQConnection.getConnection();
-             Channel channel = conn.createChannel()){
+        Connection conn = RabbitMQConnection.getConnection();
+        try (Channel channel = conn.createChannel()){
             channel.queueDeclare(QUEUE_NAME, true, false, false, null);
 
             //Gui jsonMessage
