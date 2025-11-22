@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS conversions (
   input_public_id varchar(100) DEFAULT NULL,
   input_filename varchar(255) NOT NULL,
   output_url varchar(500) DEFAULT NULL,
-  output_public_idgg varchar(100) DEFAULT NULL,
+  output_public_id varchar(100) DEFAULT NULL,
   status enum('UPLOADED','PENDING','PROCESSING','COMPLETED','FAILED') DEFAULT 'UPLOADED',
   error_message text,
   created_at timestamp NULL DEFAULT CURRENT_TIMESTAMP,

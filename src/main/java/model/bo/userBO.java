@@ -2,6 +2,7 @@ package model.bo;
 
 import model.bean.user;
 import model.dao.userDAO;
+import utils.PasswordUtil;
 import java.sql.Connection;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -27,10 +28,20 @@ public class userBO {
             return false;
         }
 
+//        String hashedPassword = PasswordUtil.hashPassword(user.getPassword());
+//        user.setPassword(hashedPassword);
+
         return userDAO.insert(user);
     }
 
-    public user login(String username, String password) {
+    public user login(String username, String password)
+    {
+//        user u =  userDAO.getByUsername(username);
+//        if (u != null && PasswordUtil.verifyPassword(password, u.getPassword())) {
+//            return u;
+//        }
+//
+//        return null;
         return userDAO.login(username, password);
     }
 
