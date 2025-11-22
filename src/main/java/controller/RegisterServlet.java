@@ -35,19 +35,16 @@ public class RegisterServlet extends HttpServlet {
 
         username = username.trim();
 
-        // Validate username length
         if (username.length() < 3 || username.length() > 50) {
             response.sendRedirect("register.jsp?error=invalid");
             return;
         }
 
-        // Validate password length
         if (password.length() < 6) {
             response.sendRedirect("register.jsp?error=invalid");
             return;
         }
 
-        // Check if passwords match
         if (!password.equals(confirmPassword)) {
             response.sendRedirect("register.jsp?error=invalid");
             return;
@@ -58,13 +55,11 @@ public class RegisterServlet extends HttpServlet {
             conn = DbConnection.getConnection();
             userDAO userDao = new userDAO(conn);
 
-            // Check if username already exists
             if (userDao.isUsernameExists(username)) {
                 response.sendRedirect("register.jsp?error=exists");
                 return;
             }
 
-            // Create new user
             user newUser = new user();
             newUser.setUsername(username);
             newUser.setPassword(password);
@@ -99,7 +94,6 @@ public class RegisterServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
-        // Redirect to register page
         response.sendRedirect("register.jsp");
     }
 }

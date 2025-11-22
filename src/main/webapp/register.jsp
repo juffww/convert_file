@@ -83,11 +83,9 @@
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             
-            // Reset messages
             document.getElementById('errorMessage').classList.remove('show');
             document.getElementById('successMessage').classList.remove('show');
 
-            // Validate username
             if (username.length < 3) {
                 showError('Tên đăng nhập phải có ít nhất 3 ký tự');
                 return false;
@@ -98,20 +96,17 @@
                 return false;
             }
 
-            // Validate username characters
             const usernameRegex = /^[a-zA-Z0-9_]+$/;
             if (!usernameRegex.test(username)) {
                 showError('Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới');
                 return false;
             }
 
-            // Validate password
             if (password.length < 6) {
                 showError('Mật khẩu phải có ít nhất 6 ký tự');
                 return false;
             }
 
-            // Validate password confirmation
             if (password !== confirmPassword) {
                 showError('Mật khẩu xác nhận không khớp');
                 return false;

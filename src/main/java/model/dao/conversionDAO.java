@@ -94,33 +94,4 @@ public class conversionDAO {
             e.printStackTrace();
         }
     }
-
-    // 5. Lấy chi tiết 1 conversion (Worker cần cái này để biết input_url ở đâu mà tải về)
-    public conversion getConversionById(int id) {
-        String sql = "SELECT * FROM conversions WHERE id = ?";
-        try (Connection conn = DbConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, id);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                conversion c = new conversion();
-                c.setId(rs.getInt("id"));
-                c.setUserId(rs.getInt("user_id"));
-                c.setInputUrl(rs.getString("input_url"));
-                c.setInputPublicId(rs.getString("input_public_id"));
-                c.setInputFilename(rs.getString("input_filename"));
-                c.setOutputUrl(rs.getString("output_url"));
-                c.setOutputPublicId(rs.getString("output_public_id"));
-                c.setStatus(rs.getString("status"));
-                c.setErrorMessage(rs.getString("error_message"));
-                c.setCreatedAt(rs.getTimestamp("created_at"));
-                c.setUpdatedAt(rs.getTimestamp("updated_at"));
-                return c;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
 }

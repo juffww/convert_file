@@ -4,8 +4,6 @@ import model.bean.user;
 import model.bo.userBO;
 import utils.DbConnection;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.Cookie;
@@ -44,7 +42,7 @@ public class LoginServlet extends HttpServlet {
 				session.setAttribute("user", u);
 				session.setAttribute("userId", u.getId());
 				session.setAttribute("username", u.getUsername());
-				session.setMaxInactiveInterval(3600); // 1 hour
+				session.setMaxInactiveInterval(3600);
 
 				if (remember != null && (remember.equals("on") || remember.equals("true"))) {
 					Cookie c = new Cookie("username", username);
@@ -52,7 +50,6 @@ public class LoginServlet extends HttpServlet {
 					c.setPath(request.getContextPath().isEmpty() ? "/" : request.getContextPath());
 					response.addCookie(c);
 				} else {
-					// Clear cookie nếu không chọn remember
 					Cookie c = new Cookie("username", "");
 					c.setMaxAge(0);
 					c.setPath(request.getContextPath().isEmpty() ? "/" : request.getContextPath());

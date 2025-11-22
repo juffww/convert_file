@@ -13,12 +13,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import utils.SecurityConfig;
 
-//Worker làm xong phải báo cáo server thông qua HTTP
 @WebServlet("/api/callback")
 public class CallbackServlet extends HttpServlet{
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Lấy secret từ header
         String authHeader = request.getHeader("X-Callback-Secret");
 
         // So sánh với secret trong config

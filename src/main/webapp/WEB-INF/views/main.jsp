@@ -493,7 +493,7 @@
     </div>
 
     <script>
-        const MAX_FILE_SIZE = 50 * 1024 * 1024;
+        const MAX_FILE_SIZE = 20 * 1024 * 1024;
 
         function validateFile() {
             const fileInput = document.getElementById('pdfFile');
@@ -501,13 +501,11 @@
             const uploadBtn = document.getElementById('uploadBtn');
             const uploadBtnText = document.getElementById('uploadBtnText');
 
-            // Reset
             fileValidation.style.display = 'none';
             fileValidation.className = 'file-validation';
             uploadBtn.disabled = true;
             uploadBtnText.textContent = 'Chọn file để tải lên';
 
-            // Kiểm tra có file không
             if (fileInput.files.length === 0) {
                 return;
             }
@@ -516,34 +514,28 @@
             let isValid = true;
             let message = '';
 
-            // 1. Kiểm tra extension
             if (!file.name.toLowerCase().endsWith('.pdf')) {
                 isValid = false;
                 message = '❌ File phải có định dạng .pdf';
             }
-            // 2. Kiểm tra file rỗng
             else if (file.size === 0) {
                 isValid = false;
                 message = '❌ File rỗng (0 bytes)';
             }
-            // 3. Kiểm tra kích thước
             else if (file.size > MAX_FILE_SIZE) {
                 isValid = false;
                 const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-                message = `❌ File quá lớn: ${sizeMB}MB (tối đa 50MB)`;
+                message = `❌ File quá lớn: ${sizeMB}MB (tối đa 20MB)`;
             }
-            // 4. File hợp lệ
             else {
                 const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
                 message = `✅ File hợp lệ: ${file.name} (${sizeMB} MB)`;
             }
 
-            // Hiển thị kết quả
             fileValidation.style.display = 'block';
             fileValidation.className = 'file-validation ' + (isValid ? 'success' : 'error');
             fileValidation.textContent = message;
 
-            // Enable/disable button
             if (isValid) {
                 uploadBtn.disabled = false;
                 uploadBtnText.textContent = 'Tải lên';
@@ -554,7 +546,6 @@
             const uploadBtn = document.getElementById('uploadBtn');
             const uploadBtnText = document.getElementById('uploadBtnText');
 
-            // Validate lần cuối
             if (fileInput.files.length === 0) {
                 e.preventDefault();
                 showMessage('❌ Vui lòng chọn file!', 'error');
@@ -572,7 +563,7 @@
             if (file.size > MAX_FILE_SIZE) {
                 e.preventDefault();
                 const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
-                showMessage(`❌ File quá lớn (${sizeMB}MB). Tối đa 50MB!`, 'error');
+                showMessage(`❌ File quá lớn (${sizeMB}MB). Tối đa 20MB!`, 'error');
                 return false;
             }
 
@@ -582,11 +573,9 @@
                 return false;
             }
 
-            // Disable button
             uploadBtn.disabled = true;
             uploadBtnText.textContent = 'Đang tải lên...';
         });
-        // Hiển thị message từ URL params
         window.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const success = urlParams.get('success');
@@ -643,14 +632,12 @@
             
             const file = fileInput.files[0];
             
-            // Kiểm tra loại file
             if (!file.name.toLowerCase().endsWith('.pdf')) {
                 e.preventDefault();
                 showMessage('❌ Chỉ chấp nhận file PDF!', 'error');
                 return false;
             }
             
-            // Kiểm tra kích thước file (20MB = 20 * 1024 * 1024 bytes)
             const maxSize = 20 * 1024 * 1024;
             if (file.size > maxSize) {
                 e.preventDefault();
@@ -682,7 +669,6 @@
         }
 
         function refreshHistory() {
-            // Reload trang main để lấy dữ liệu mới nhất
             window.location.href = 'main';
         }
     </script>
