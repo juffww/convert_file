@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #eff0f5;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -44,8 +44,8 @@
         }
 
         .login-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 40px 30px;
+            background: #667eea;
+            padding: 20px 20px;
             text-align: center;
             color: white;
         }
@@ -61,7 +61,7 @@
         }
 
         .login-form {
-            padding: 40px 30px;
+            padding: 30px 30px;
         }
 
         .form-group {
@@ -133,7 +133,7 @@
         .login-button {
             width: 100%;
             padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             color: white;
             border: none;
             border-radius: 8px;
@@ -221,8 +221,7 @@
 <body>
     <div class="login-container">
         <div class="login-header">
-            <h1>Chào mừng trở lại!</h1>
-            <p>Đăng nhập để chuyển đổi PDF sang DOCX</p>
+            <h1>Đăng nhập</h1>
         </div>
         
         <form class="login-form" action="auth" method="POST" onsubmit="return validateForm()">
@@ -254,23 +253,8 @@
                 >
             </div>
 
-            <div class="form-options">
-                <div class="remember-me">
-                    <input type="checkbox" id="remember" name="remember">
-                    <label for="remember">Ghi nhớ đăng nhập</label>
-                </div>
-                <a href="#" class="forgot-password">Quên mật khẩu?</a>
-            </div>
 
             <button type="submit" class="login-button">Đăng nhập</button>
-
-            <div class="divider">
-                <span>hoặc</span>
-            </div>
-
-            <div class="signup-link">
-                Chưa có tài khoản? <a href="register.html">Đăng ký ngay</a>
-            </div>
         </form>
     </div>
 

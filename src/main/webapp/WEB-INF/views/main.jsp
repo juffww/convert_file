@@ -18,7 +18,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #eff0f5;
             min-height: 100vh;
             padding: 20px;
         }
@@ -125,7 +125,7 @@
 
         .upload-btn {
             padding: 12px 30px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             color: white;
             border: none;
             border-radius: 8px;
@@ -134,6 +134,7 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            margin-bottom:6px;
         }
 
         .upload-btn:hover {
@@ -167,7 +168,7 @@
         }
 
         .files-table thead {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #667eea;
             color: white;
         }
 
@@ -228,6 +229,7 @@
         .download-btn {
             background: #4CAF50;
             color: white;
+            text-decoration: none;
         }
 
         .download-btn:hover {
@@ -324,7 +326,7 @@
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>📄 PDF to DOCX Converter</h1>
+            <h1> CHUYỂN ĐỔI TỪ PDF THÀNH DOCX</h1>
             <div class="user-info">
                 <span class="user-name">👤 <%= session.getAttribute("username") %></span>
                 <form action="logout" method="POST" style="display:inline;">
@@ -338,7 +340,7 @@
 
         <!-- Upload Section -->
         <div class="upload-section">
-            <h2>📤 Tải lên file PDF</h2>
+            <h2> Tải lên file PDF</h2>
             <form action="upload" method="POST" enctype="multipart/form-data" class="upload-form" id="uploadForm">
                 <div class="file-input-wrapper">
                     <label for="pdfFile">Chọn file PDF:</label>
@@ -362,9 +364,9 @@
         <!-- Files List Section -->
         <div class="files-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin: 0;">📋 Lịch sử chuyển đổi</h2>
+                <h2 style="margin: 0;">Danh sách các file đã tải lên</h2>
                 <button onclick="refreshHistory()" class="action-btn convert-btn" style="padding: 8px 20px; font-size: 14px;">
-                    🔄 Làm mới
+                     Làm mới
                 </button>
             </div>
             
