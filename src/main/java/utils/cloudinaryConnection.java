@@ -3,7 +3,7 @@ package utils;
 import com.cloudinary.utils.ObjectUtils;
 import com.cloudinary.Cloudinary;
 
-public class cloudinaryConnection {
+public class CloudinaryConnection {
     private static Cloudinary cloudinary;
 
     public static Cloudinary getInstance() {

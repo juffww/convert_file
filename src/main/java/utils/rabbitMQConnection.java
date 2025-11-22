@@ -3,7 +3,7 @@ package utils;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
 
-public class rabbitMQConnection {
+public class RabbitMQConnection {
     private static final String CLOUD_AMQP_URL = "amqps://nymrwcow:dhBMcLKNSyP6SPin8ytNmrbsPJ3kFqcd@possum.lmq.cloudamqp.com/nymrwcow";
 
     public static Connection getConnection() throws Exception {
